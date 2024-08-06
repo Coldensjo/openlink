@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number Input App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #container {
+            text-align: center;
+        }
+        input {
+            font-size: 2rem;
+            text-align: center;
+            width: 200px;
+            ime-mode: disabled; /* Disable input method editor on mobile devices */
+        }
+        button {
+            font-size: 2rem;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <input type="text" id="numberInput" maxlength="8" inputmode="numeric" pattern="[0-9]*" value="12" />
+        <button id="clearButton">Clear</button>
+    </div>
+    <script>
+        window.onload = function() {
+            const input = document.getElementById('numberInput');
+            const clearButton = document.getElementById('clearButton');
+            let redirected = false; // Flag to prevent multiple redirects
+
+            // Function to set cursor position after "12"
+            function setCursorPosition() {
+                const value = input.value;
+                input.value = ''; // Reset value to move cursor
+                input.value = value; // Restore value
+                input.setSelectionRange(2, 2); // Set cursor position after "12"
+            }
+
+            // Prevent scrolling inside the input box
+            input.addEventListener('wheel', (event) => {
+                event.preventDefault();
+            });
+
+            // Ensure the input starts with "12"
+            input.value = "12";
+            setCursorPosition();
+
+            // Clear the input when the user navigates back
+            window.addEventListener('focus', () => {
+                input.value = "12";
+                redirected = false; // Reset the flag when the user navigates back
+                setCursorPosition();
+                input.focus(); // Focus the input so the user can start typing immediately
+            });
+
+            clearButton.addEventListener('click', () => {
+                input.value = "12";
+                redirected = false; // Reset the flag when the input is cleared
+                setCursorPosition();
+                input.focus(); // Focus the input so the user can start typing immediately
+            });
+
+            input.addEventListener('input', () => {
+                // Allow only numbers and ensure it starts with "12"
+                if (!input.value.startsWith("12")) {
+                    input.value = "12" + input.value.replace(/[^0-9]/g, '');
+                    setCursorPosition();
+                } else {
+                    input.value = input.value.replace(/[^0-9]/g, '');
+                }
+
+                // Limit the length to 8 characters
+                if (input.value.length > 8) {
+                    input.value = input.value.slice(0, 8);
+                }
+
+                // Check if the length is 8 and open a new window
+                if (input.value.length === 8 && !redirected) {
+                    const url = `https://logiqrma.com/ombytte/Main?tpl=req&prm=dspreq&rid=${input.value}`;
+                    const newWindow = window.open(url, '_blank');
+                    
+                    if (newWindow) {
+                        newWindow.focus();
+                        redirected = true; // Set the flag to true after redirection
+                    } else {
+                        // Handle case where pop-up blocker prevents opening new window
+                        alert('Please allow pop-ups for this website to proceed.');
+                    }
+                }
+            });
+
+            // Focus the input field initially and set cursor position
+            input.focus();
+            setCursorPosition();
+        };
+    </script>
+</body>
+</html>

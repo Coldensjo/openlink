@@ -1,0 +1,17 @@
+{
+  "name": "local-web-app",
+  "version": "1.0.0",
+  "description": "Local web app using Electron and Express",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^25.1.0"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
