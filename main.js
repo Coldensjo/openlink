@@ -16,7 +16,7 @@ function createWindow() {
 
 // Set up Express server
 const server = express();
-server.use(express.static(path.join(__dirname, 'public')));
+server.use(express.static(__dirname));
 
 server.listen(3000, () => {
     console.log('Server running at http://localhost:3000');

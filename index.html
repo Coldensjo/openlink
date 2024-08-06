@@ -6,78 +6,98 @@
     <title>Number Input App</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Courier New', Courier, monospace; /* Monospace font */
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             margin: 0;
-            background-color: #f0f0f0;
+            background-color: #6e6e6e;
         }
         #container {
             text-align: center;
         }
-        input {
+        #display {
             font-size: 2rem;
             text-align: center;
-            width: 200px;
-            ime-mode: disabled; /* Disable input method editor on mobile devices */
+            width: 230px;
+            height: 50px;
+            border: 2px solid #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.5rem;
+            margin: 0 auto;
+            background-color: #fff;
+            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            font-weight: bold;
+        }
+        #numberInput {
+            position: absolute;
+            opacity: 0;
+            height: 0;
+            width: 0;
         }
         button {
+            font-family: 'Courier New', Courier, monospace; /* Monospace font */
+            font-weight: bold;
+            width: 230px;
+            height: 50px;
+            display: block;
             font-size: 2rem;
-            margin-top: 10px;
+            margin: 10px auto;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div id="container">
-        <input type="text" id="numberInput" maxlength="8" inputmode="numeric" pattern="[0-9]*" value="12" />
+        <div id="display">12******</div>
+        <input type="text" id="numberInput" maxlength="8" inputmode="numeric" pattern="[0-9]*" />
         <button id="clearButton">Clear</button>
     </div>
     <script>
         window.onload = function() {
             const input = document.getElementById('numberInput');
+            const display = document.getElementById('display');
             const clearButton = document.getElementById('clearButton');
             let redirected = false; // Flag to prevent multiple redirects
 
-            // Function to set cursor position after "12"
-            function setCursorPosition() {
-                const value = input.value;
-                input.value = ''; // Reset value to move cursor
-                input.value = value; // Restore value
-                input.setSelectionRange(2, 2); // Set cursor position after "12"
+            // Function to update the display
+            function updateDisplay() {
+                const enteredDigits = input.value.slice(2); // Get the entered digits after "12"
+                const stars = '*'.repeat(6 - enteredDigits.length);
+                display.textContent = `12${enteredDigits}${stars}`;
             }
-
-            // Prevent scrolling inside the input box
-            input.addEventListener('wheel', (event) => {
-                event.preventDefault();
-            });
 
             // Ensure the input starts with "12"
             input.value = "12";
-            setCursorPosition();
+            updateDisplay();
+
+            // Focus the hidden input when the display is clicked
+            display.addEventListener('click', () => {
+                input.focus();
+            });
 
             // Clear the input when the user navigates back
             window.addEventListener('focus', () => {
                 input.value = "12";
                 redirected = false; // Reset the flag when the user navigates back
-                setCursorPosition();
                 input.focus(); // Focus the input so the user can start typing immediately
+                updateDisplay();
             });
 
             clearButton.addEventListener('click', () => {
                 input.value = "12";
                 redirected = false; // Reset the flag when the input is cleared
-                setCursorPosition();
                 input.focus(); // Focus the input so the user can start typing immediately
+                updateDisplay();
             });
 
             input.addEventListener('input', () => {
                 // Allow only numbers and ensure it starts with "12"
                 if (!input.value.startsWith("12")) {
                     input.value = "12" + input.value.replace(/[^0-9]/g, '');
-                    setCursorPosition();
                 } else {
                     input.value = input.value.replace(/[^0-9]/g, '');
                 }
@@ -86,6 +106,9 @@
                 if (input.value.length > 8) {
                     input.value = input.value.slice(0, 8);
                 }
+
+                // Update the display
+                updateDisplay();
 
                 // Check if the length is 8 and open a new window
                 if (input.value.length === 8 && !redirected) {
@@ -102,9 +125,8 @@
                 }
             });
 
-            // Focus the input field initially and set cursor position
+            // Focus the input field initially
             input.focus();
-            setCursorPosition();
         };
     </script>
 </body>
