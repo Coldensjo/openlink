@@ -1,1 +1,1 @@
-Simply opens a link to logiqRMA. Used personally for work.
+A github page made with Electron that simplifies opening links to logiqRMA with the phone.
