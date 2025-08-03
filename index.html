@@ -56,7 +56,7 @@
 </head>
 <body>
     <div id="container">
-        <div id="display">12******</div>
+        <div id="display">1*******</div>
         <input type="text" id="numberInput" maxlength="8" inputmode="numeric" pattern="[0-9]*" />
         <button id="clearButton">Clear</button>
     </div>
@@ -65,78 +65,68 @@
             const input = document.getElementById('numberInput');
             const display = document.getElementById('display');
             const clearButton = document.getElementById('clearButton');
-            let redirected = false; // Flag to prevent multiple redirects
+            let redirected = false;
 
-            // Function to update the display
             function updateDisplay() {
-                const enteredDigits = input.value.slice(2); // Get the entered digits after "12"
-                const stars = '*'.repeat(6 - enteredDigits.length);
-                display.textContent = `12${enteredDigits}${stars}`;
+                const enteredDigits = input.value.slice(1); // Get digits after "1"
+                const stars = '*'.repeat(7 - enteredDigits.length); // 8 total chars, 1 digit + 7 stars
+                display.textContent = `1${enteredDigits}${stars}`;
             }
 
-            // Ensure the input starts with "12"
-            input.value = "12";
+            // Initialize with "1"
+            input.value = "1";
             updateDisplay();
 
-            // Focus the hidden input when the display is clicked
             display.addEventListener('click', () => {
                 input.focus();
             });
 
-            // Clear the input when the user navigates back
             window.addEventListener('focus', () => {
-                input.value = "12";
-                redirected = false; // Reset the flag when the user navigates back
-                input.focus(); // Focus the input so the user can start typing immediately
+                input.value = "1";
+                redirected = false;
+                input.focus();
                 updateDisplay();
             });
 
             clearButton.addEventListener('click', () => {
-                input.value = "12";
-                redirected = false; // Reset the flag when the input is cleared
-                input.focus(); // Focus the input so the user can start typing immediately
+                input.value = "1";
+                redirected = false;
+                input.focus();
                 updateDisplay();
             });
 
             input.addEventListener('keydown', (event) => {
-                // Prevent backspace from removing "12"
-                if (event.key === "Backspace" && input.value.length <= 2) {
+                if (event.key === "Backspace" && input.value.length <= 1) {
                     event.preventDefault();
                 }
             });
 
             input.addEventListener('input', () => {
-                // Allow only numbers and ensure it starts with "12"
-                if (!input.value.startsWith("12")) {
-                    input.value = "12" + input.value.replace(/[^0-9]/g, '');
+                if (!input.value.startsWith("1")) {
+                    input.value = "1" + input.value.replace(/[^0-9]/g, '');
                 } else {
                     input.value = input.value.replace(/[^0-9]/g, '');
                 }
 
-                // Limit the length to 8 characters
                 if (input.value.length > 8) {
                     input.value = input.value.slice(0, 8);
                 }
 
-                // Update the display
                 updateDisplay();
 
-                // Check if the length is 8 and open a new window
                 if (input.value.length === 8 && !redirected) {
                     const url = `https://logiqrma.com/ombytte/Main?tpl=req&prm=dspreq&rid=${input.value}`;
                     const newWindow = window.open(url, '_blank');
                     
                     if (newWindow) {
                         newWindow.focus();
-                        redirected = true; // Set the flag to true after redirection
+                        redirected = true;
                     } else {
-                        // Handle case where pop-up blocker prevents opening new window
                         alert('Please allow pop-ups for this website to proceed.');
                     }
                 }
             });
 
-            // Focus the input field initially
             input.focus();
         };
     </script>
